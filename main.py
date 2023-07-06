@@ -4,6 +4,7 @@ import sys
 import parse
 import wharf
 import usage
+import generate
 
 
 def main():
@@ -15,8 +16,8 @@ def main():
             usage.print_usage()
             exit(0)
         elif operation == "-n" or operation == "new":
-            # TODO generate new "wharf.toml"
-            print("generating new wharf.toml file")
+            generate.new_wharf_toml()
+            print("generated new wharf file")
             exit(0)
         else:
             print(f"invalid argument '{operation}'")
@@ -24,8 +25,7 @@ def main():
 
 
     # parse file and build wharf object
-    WHARF_PATH: str = "wharf.toml"
-    parsed: dict[str, Any] = parse.parse_toml(WHARF_PATH)
+    parsed: dict[str, Any] = parse.parse_toml(wharf.WHARF_PATH)
     if parsed == None:
         exit(1)
 

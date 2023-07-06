@@ -4,6 +4,9 @@ import subprocess
 MAN_PACMAN: str = "pacman"
 MAN_APT: str = "apt"
 
+# name of wharf file
+WHARF_PATH: str = "wharf.toml"
+
 class Wharf():
     """ class to model wharf-file contents """
     manager: str = ""
