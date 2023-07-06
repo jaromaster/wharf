@@ -1,21 +1,40 @@
-from typing import Any
-import parse
+import subprocess
 
-def main():
-    # parse file and build wharf object
-    parsed: dict[str, Any] = parse.parse_toml("wharf.toml")
-    if parsed == None:
-        exit(1)
+# supported managers
+MAN_PACMAN: str = "pacman"
+MAN_APT: str = "apt"
 
-    wharf: parse.Wharf = parse.build_wharf(parsed)
+class Wharf():
+    """ class to model wharf-file contents """
+    manager: str = ""
+    names: list[str] = []
 
-    # install packages
-    success: bool = wharf.install()
-    if success:
-        print("installation successful.")
-    else:
-        exit(1)
+    def __str__(self) -> str:
+        return f"Wharf[manager=\"{self.manager}\", names={self.names}]"
+    
+    def install(self) -> bool:
+        """ install packages using manager """
 
+        command: list[str] = []
+        if self.manager == MAN_PACMAN:
+            command = ["pacman", "-Sy", "--noconfirm"]
+            command.extend(self.names)
 
-if __name__ == "__main__":
-    main()
+        elif self.manager == MAN_APT: # TODO testing
+            command = ["apt", "install", "-y"]
+            command.extend(self.names)
+
+        else:
+            print(f"package manager '{self.manager}' not supported")
+            return False
+
+        try:
+            res = subprocess.run(command)
+            if res.returncode == 0:
+                return False
+        except Exception:
+            print(f"Make sure {self.manager} is installed and you are running Wharf as root.")
+            return False
+            
+
+        return True
