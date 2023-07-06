@@ -7,6 +7,7 @@ import usage
 
 
 def main():
+    # check for args
     if len(sys.argv) == 2:
         operation: str = sys.argv[1]
 
